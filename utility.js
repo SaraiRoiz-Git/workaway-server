@@ -19,7 +19,6 @@ const createNewUser = (req, hashPassword) => {
     });
 }
 
-
 module.exports = {
     checkIfMailExist,
     validatePassword,

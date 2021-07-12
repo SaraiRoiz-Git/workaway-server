@@ -7,7 +7,6 @@ const util = require('../utility')
 const cors = require('cors')
 
 //signup routh
-
 router.post('/signup', async (req, res) => {
 
     //checking if mail exist
