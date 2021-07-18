@@ -1,23 +1,28 @@
 const { validate } = require('./model/User');
 const User = require('./model/User');
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const checkIfMailExist = (req) => {
     return User.findOne({ email: req.body.email });
 }
 
-const checkIfIDExist = (id) => {
-    return User.updateOne({ _id: id },
+const checkIfIDExist = (req, id) => {
+    return User.findOneAndUpdate({ _id: id },
         {
             userName: req.body.userName,
             name: req.body.name,
             lastName: req.body.lastName,
-            email: req.body.email,
-            password: hashPassword,
-            city: req.body.city,
+            email: req.body.email,             city: req.body.city,
             country: req.body.country,
             postal: req.body.postal,
             about: req.body.about
+        }, {new: true},(err, doc) => {
+            if (err) {
+                console.log("Something wrong when updating data!");
+            }
+            console.log(doc);
+            return doc
         });
 }
 
@@ -41,13 +46,14 @@ const createNewUser = (req, hashPassword) => {
 }
 
 const getUserIdFromToken = (token)=>{
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);  
-    return decoded.id  
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    return decoded._id
 }
 
 module.exports = {
     checkIfMailExist,
     validatePassword,
     createNewUser,
+    checkIfIDExist,
     getUserIdFromToken
 }

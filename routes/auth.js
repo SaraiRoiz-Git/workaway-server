@@ -54,13 +54,30 @@ router.post("/logout", verify, (req, res) => {
 });
 
 router.put("/update-data", verify, (req, res) => {
-    const id = util.getUserIdFromToken(req.headers[auth - token])
-    console.log(id)
-    const user = checkIfIDExist(req)
-    if (!user) {
-        return res.status(400).send('Incorect user')
-    }
-    return res.send(user).sendStatus(200);
+    console.log("token:" ,req.headers['auth-token']);
+    const id = util.getUserIdFromToken(req.headers['auth-token'])
+    console.log("id:", id);
+    util.checkIfIDExist(req, id).then(user =>{
+        console.log("res:" ,user);
+        if (!user) {
+            console.log("user not exist:");
+            return res.status(400).send('Incorect user')
+        }
+        console.log("returning user");
+        return res.send(user).sendStatus(200);
+    });
+    // console.log("user:", user.user)
+    // if (!user) {
+    //     console.log("user not exist:");
+    //     return res.status(400).send('Incorect user')
+    // }
+
+
+    //update user user, id, req
+
+
+
+
 });
 
 router.get("/data", verify, (req, res) => {
