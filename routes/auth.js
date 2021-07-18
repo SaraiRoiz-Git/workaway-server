@@ -23,6 +23,7 @@ router.post('/signup', async (req, res) => {
     try {
         user.save()
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
+        user.password = null
         res.header('auth-token', token).send({ user, token })
     } catch (error) {
         res.status(400).send(err)
@@ -45,6 +46,7 @@ router.post('/login', cors(), async (req, res) => {
 
     //create and assign token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
+    user.password = null
     res.header('auth-token', token).send({ user, token })
 })
 
@@ -54,16 +56,13 @@ router.post("/logout", verify, (req, res) => {
 });
 
 router.put("/update-data", verify, (req, res) => {
-    console.log("token:" ,req.headers['auth-token']);
     const id = util.getUserIdFromToken(req.headers['auth-token'])
-    console.log("id:", id);
-    util.checkIfIDExist(req, id).then(user =>{
-        console.log("res:" ,user);
+    util.checkIfIDExist(req, id).then(user => {
         if (!user) {
-            console.log("user not exist:");
             return res.status(400).send('Incorect user')
         }
         console.log("returning user");
+        user.password = null
         return res.send(user).sendStatus(200);
     });
 });

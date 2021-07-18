@@ -13,11 +13,11 @@ const checkIfIDExist = (req, id) => {
             userName: req.body.userName,
             name: req.body.name,
             lastName: req.body.lastName,
-            email: req.body.email,             city: req.body.city,
+            email: req.body.email, city: req.body.city,
             country: req.body.country,
             postal: req.body.postal,
             about: req.body.about
-        }, {new: true},(err, doc) => {
+        }, { new: true }, (err, doc) => {
             if (err) {
                 console.log("Something wrong when updating data!");
             }
@@ -32,11 +32,12 @@ const validatePassword = (req, user) => {
 
 const createNewUser = (req, hashPassword) => {
     return new User({
-      
+
         name: req.body.name,
         lastName: req.body.lastName,
         email: req.body.email,
         password: hashPassword,
+        userName: "",
         city: "",
         country: "",
         postal: "",
@@ -45,7 +46,7 @@ const createNewUser = (req, hashPassword) => {
     });
 }
 
-const getUserIdFromToken = (token)=>{
+const getUserIdFromToken = (token) => {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     return decoded._id
 }
