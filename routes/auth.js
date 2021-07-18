@@ -23,7 +23,6 @@ router.post('/signup', async (req, res) => {
     try {
         user.save()
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-        user.password = null
         res.header('auth-token', token).send({ user, token })
     } catch (error) {
         res.status(400).send(err)
@@ -46,7 +45,6 @@ router.post('/login', cors(), async (req, res) => {
 
     //create and assign token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-    user.password = null
     res.header('auth-token', token).send({ user, token })
 })
 
@@ -62,7 +60,6 @@ router.put("/update-data", verify, (req, res) => {
             return res.status(400).send('Incorect user')
         }
         console.log("returning user");
-        user.password = null
         return res.send(user).sendStatus(200);
     });
 });
