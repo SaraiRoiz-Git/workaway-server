@@ -66,18 +66,6 @@ router.put("/update-data", verify, (req, res) => {
         console.log("returning user");
         return res.send(user).sendStatus(200);
     });
-    // console.log("user:", user.user)
-    // if (!user) {
-    //     console.log("user not exist:");
-    //     return res.status(400).send('Incorect user')
-    // }
-
-
-    //update user user, id, req
-
-
-
-
 });
 
 router.get("/data", verify, (req, res) => {
