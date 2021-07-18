@@ -19,11 +19,11 @@ router.post('/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-    const user = util.createNewUser(req,hashPassword)
+    const user = util.createNewUser(req, hashPassword)
     try {
-       user.save()
-       const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-       res.header('auth-token', token).send(token)
+        user.save()
+        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
+        res.header('auth-token', token).send({ user, token })
     } catch (error) {
         res.status(400).send(err)
     }
@@ -38,14 +38,14 @@ router.post('/login', cors(), async (req, res) => {
     }
 
     //validate password
-    const validPass = await util.validatePassword(req,user)
+    const validPass = await util.validatePassword(req, user)
     if (!validPass) {
         return res.status(400).send('Email or password is worng')
     }
 
     //create and assign token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-    res.header('auth-token', token).send(token)
+    res.header('auth-token', token).send({ user, token })
 })
 
 //logout route
@@ -53,6 +53,15 @@ router.post("/logout", verify, (req, res) => {
     res.sendStatus(200);
 });
 
+router.put("/update-data", verify, (req, res) => {
+    const id = util.getUserIdFromToken(req.headers[auth - token])
+    console.log(id)
+    const user = checkIfIDExist(req)
+    if (!user) {
+        return res.status(400).send('Incorect user')
+    }
+    return res.send(user).sendStatus(200);
+});
 
 router.get("/data", verify, (req, res) => {
     return res.send("ok").sendStatus(200);
